@@ -1,6 +1,6 @@
-import Deck
-import Player
-import Card
+from Deck import Deck
+from Player import Player
+from Card import Card
 from random import randint
 
 
