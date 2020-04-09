@@ -53,17 +53,23 @@ class Deck:
     ]
     imploding_kittens_expansion_deck = []
     streaking_kittens_expansion_deck = []
+    exploding_kitten_cards = [
+        Card('exploding kitten', 'earth'),
+        Card('exploding kitten', 'ship'),
+        Card('exploding kitten', 'boat'),
+        Card('exploding kitten', 'house')
+    ]
+    defuse_cards = [
+        Card('defuse', 'laser pointer'),
+        Card('defuse', 'therapy'),
+        Card('defuse', 'belly rub'),
+        Card('defuse', 'catnip sandwich'),
+        Card('defuse', 'yoga'),
+        Card('defuse', '3am flatulence')
+    ]
 
-    def __init__(self, players: int, imploding_kittens_expansion: bool, streaking_kittens_expansion: bool):
-        if streaking_kittens_expansion and imploding_kittens_expansion:
-            pass
-        elif imploding_kittens_expansion:
-            pass
-        elif streaking_kittens_expansion:
-            pass
-        else:
-            pass
-        self.cards = []
+    def __init__(self, cards: list):
+        self.cards = cards
 
     def draw(self, index):
         return self.cards.pop(index) if 0 <= index < len(self.cards) else None
@@ -76,3 +82,12 @@ class Deck:
 
     def insert(self, index, card):
         self.cards.insert(index, card)
+
+    def insert_randomly(self, card):
+        self.cards.insert(randint(0, len(self.cards)), card)
+
+    def shuffle(self):
+        temp = self.cards
+        self.cards = []
+        while len(temp) > 0:
+            self.cards.append(temp.pop(randint(0, len(temp) - 1)))
