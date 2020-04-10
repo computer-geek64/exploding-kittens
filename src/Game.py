@@ -1,4 +1,5 @@
 from Deck import Deck
+from DiscardPile import DiscardPile
 from Player import Player
 from Card import Card
 from random import randint
@@ -15,6 +16,7 @@ class Game:
             cards += Deck.streaking_kittens_expansion_deck
 
         self.deck = Deck(cards)
+        self.discard_pile = DiscardPile()
         self.deck.shuffle()
 
         c = 0
@@ -59,6 +61,13 @@ class Game:
 
     def get_player_by_name(self, name):
         return [x for x in self.players if x.name == name][0]
+
+    def remove_player(self, name):
+        index = [i for i in range(len(self.deck.cards)) if self.deck.cards[i].action == 'exploding kitten'][0]
+        self.discard_pile.add(self.deck.draw(index))
+        self.discard_pile.add(self.get_player_by_name(name).hand.cards)
+        self.turn %= len(self.players)
+        self.players.remove(self.get_player_by_name(name))
 
     def end_turn(self):
         self.turn += 1

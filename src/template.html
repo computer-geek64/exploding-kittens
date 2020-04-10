@@ -2,6 +2,19 @@
 <html lang="en">
 <head>
     <title>Test</title>
+    <style>
+        .active-turn {
+            color: red;
+        }
+
+        .active-turn::before {
+            content: "[";
+        }
+
+        .active-turn::after {
+            content: "]";
+        }
+    </style>
 </head>
 <body>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
@@ -21,11 +34,11 @@
             document.querySelector('#game').innerHTML = '';
             var p = document.createElement('p');
             for(var i = 0; i < data['players'].length; i++) {
-                if(data['turn'] == i) {
-                    p.innerText += '[' + data['players'][i] + '] ';
+                if(data['turn'] === i) {
+                    p.innerHTML += '<span class="active-turn">' + data['players'][i] + '</span>&emsp;';
                 }
                 else {
-                    p.innerText += data['players'][i] + ' ';
+                    p.innerHTML += '<span>' + data['players'][i] + '</span>&emsp;';
                 }
             }
             document.querySelector('#game').appendChild(p);
@@ -40,7 +53,7 @@
         });
     </script>
     <input id="username-input" type="text" placeholder="Username">
-    <button onclick="socket.emit('join', {'username': document.querySelector('#username-input').value, 'id': socket.id.split('#')[1]});">Join Game</button>
+    <button onclick="socket.emit('join', document.querySelector('#username-input').value);">Join Game</button>
     <button onclick="socket.emit('start');">Start Game</button>
     <div id="game"></div>
 </body>
