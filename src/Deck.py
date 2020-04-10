@@ -51,8 +51,43 @@ class Deck:
         Card('skip', 'crab walk'),
         Card('skip', 'hypergoat')
     ]
-    imploding_kittens_expansion_deck = []
-    streaking_kittens_expansion_deck = []
+    imploding_kittens_expansion_deck = [
+        Card('alter the future', 'bum of cat'),
+        Card('alter the future', 'furmaid'),
+        Card('alter the future', 'manatee'),
+        Card('alter the future', 'space crab'),
+        Card('targeted attack', 'groin panda'),
+        Card('targeted attack', 'hamster crossbow'),
+        Card('targeted attack', 'word shark'),
+        Card('cat', 'feral cat'),
+        Card('cat', 'feral cat'),
+        Card('cat', 'feral cat'),
+        Card('cat', 'feral cat'),
+        Card('draw from the bottom', 'coward sandwich'),
+        Card('draw from the bottom', 'firework underpants'),
+        Card('draw from the bottom', 'say nice'),
+        Card('draw from the bottom', 'sentient toilet'),
+        Card('reverse', 'doctor visit'),
+        Card('reverse', 'pregnant dinosaur'),
+        Card('reverse', 'try new'),
+        Card('reverse', 'tummy massage')
+    ]
+    streaking_kittens_expansion_deck = [
+        Card('swap top and bottom', ''),
+        Card('swap top and bottom', ''),
+        Card('swap top and bottom', ''),
+        Card('super skip', ''),
+        Card('curse of the cat butt', ''),
+        Card('curse of the cat butt', ''),
+        Card('catomic bomb', ''),
+        Card('mark', ''),
+        Card('mark', ''),
+        Card('mark', ''),
+        Card('alter the future 5x', ''),
+        Card('see the future 5x', ''),
+        Card('garbage collection', ''),
+        Card('streaking kitten', '')
+    ]
     exploding_kitten_cards = [
         Card('exploding kitten', 'earth'),
         Card('exploding kitten', 'ship'),

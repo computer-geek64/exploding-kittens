@@ -19,6 +19,16 @@
 
         socket.on('update', function(data) {
             document.querySelector('#game').innerHTML = '';
+            var p = document.createElement('p');
+            for(var i = 0; i < data['players'].length; i++) {
+                if(data['turn'] == i) {
+                    p.innerText += '[' + data['players'][i] + '] ';
+                }
+                else {
+                    p.innerText += data['players'][i] + ' ';
+                }
+            }
+            document.querySelector('#game').appendChild(p);
             var ul = document.createElement('ul');
             for(var i = 0; i < 8; i++) {
                 var li = document.createElement('li');

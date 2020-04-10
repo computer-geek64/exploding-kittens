@@ -55,6 +55,10 @@ class Game:
                 self.deck.insert_randomly(Deck.exploding_kitten_cards[randint(0, len(Deck.exploding_kitten_cards) - 1)])
 
         self.deck.shuffle()
+        self.turn = 0
 
     def get_player_by_name(self, name):
         return [x for x in self.players if x.name == name][0]
+
+    def end_turn(self):
+        self.turn += 1

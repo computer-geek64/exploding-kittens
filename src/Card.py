@@ -3,6 +3,7 @@ class Card:
         self.action = action.lower()
         self.id = id.lower()
         self.image = self.action + ' ' + self.id + '.png'
+        self.flipped = False
 
     def __str__(self):
-        return '<Card: ' + self.action + ', id: ' + self.id + '>'
+        return self.action

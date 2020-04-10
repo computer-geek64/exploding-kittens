@@ -8,6 +8,7 @@ app = Flask(__name__, template_folder=os.path.abspath(os.path.dirname(__file__))
 socketio = SocketIO(app)
 
 users = {}
+game = None
 
 
 @app.route('/', methods=['GET'])
@@ -28,9 +29,11 @@ def disconnected():
 
 @socketio.on('start', namespace='/games/exploding-kittens')
 def start_game():
+    global game
     game = Game(users.keys())
     for k in users.keys():
-        emit('update', {'hand': list(map(lambda x: x.action, game.get_player_by_name(k).hand.cards))}, room=users[k])
+        emit('update', {'turn': game.turn % len(game.players), 'players': list(map(str, game.players)), 'hand': list(map(str, game.get_player_by_name(k).hand.cards))}, room=users[k])
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 8000)

@@ -11,5 +11,8 @@ class Hand:
     def play(self, index):
         return self.cards.pop(index)
 
+    def flip(self, index):
+        return self.cards[index]
+
     def __str__(self):
         return str(list(map(str, self.cards)))
