@@ -67,7 +67,7 @@
             let div = document.createElement('div');
             div.style['position'] = 'fixed';
             div.style['bottom'] = 0;
-            div.style['height'] = '40px';
+            div.style['height'] = '200px';
             div.style['width'] = '100%';
             div.style['border-top']
 
@@ -85,7 +85,7 @@
 
             for(let i = 0; i < data['hand'].length; i++) {
                 let td = document.createElement('td');
-                td.innerText = data['hand'][i];
+                td.innerHTML = '<img src="/static/cards/' + data['hand'][i]['image'] + '" alt="' + data['hand'][i]['action'] + '" style="height: 200px;">';
                 tr.appendChild(td);
             }
 

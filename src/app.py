@@ -52,7 +52,7 @@ def send_update():
         response = {
             'username': k,
             'turn': str(game.players[game.turn % len(game.players)]),
-            'hand': list(map(str, game.get_player_by_name(k).hand.cards))
+            'hand': [{'action': x.action, 'image': x.image, 'flipped': x.flipped, 'id': x.id} for x in game.get_player_by_name(k).hand.cards]
         }
         for player in game.players:
             if not str(player) == k:
