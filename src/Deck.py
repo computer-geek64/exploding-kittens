@@ -91,3 +91,6 @@ class Deck:
         self.cards = []
         while len(temp) > 0:
             self.cards.append(temp.pop(randint(0, len(temp) - 1)))
+
+    def __str__(self):
+        return str(list(map(str, self.cards)))

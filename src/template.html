@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Test</title>
+</head>
+<body>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script type="text/javascript">
+        //var socket = io.connect('http://' + document.domain + ':' + location.port);
+        var socket = io('/games/exploding-kittens');
+
+        socket.on('connect', function() {
+            console.log('Websocket established!')
+        });
+
+        socket.on('message', function(data) {
+            console.log(data);
+        });
+
+        socket.on('update', function(data) {
+            document.querySelector('#game').innerHTML = '';
+            var ul = document.createElement('ul');
+            for(var i = 0; i < 8; i++) {
+                var li = document.createElement('li');
+                li.innerText = data['hand'][i];
+                ul.appendChild(li);
+            }
+            document.querySelector('#game').appendChild(ul);
+            console.log('Current hand: ' + data['hand']);
+        });
+    </script>
+    <input id="username-input" type="text" placeholder="Username">
+    <button onclick="socket.emit('join', {'username': document.querySelector('#username-input').value, 'id': socket.id.split('#')[1]});">Join Game</button>
+    <button onclick="socket.emit('start');">Start Game</button>
+    <div id="game"></div>
+</body>
+</html>
