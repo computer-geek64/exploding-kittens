@@ -22,6 +22,11 @@ def join(username):
     send('You have joined the game, ' + username + '!')
 
 
+@socketio.on('show_players', namespace='/games/exploding-kittens')
+def show_players():
+    emit('update_players', list(users.keys()))
+
+
 @socketio.on('disconnect', namespace='/games/exploding-kittens')
 def disconnected():
     if request.sid in users.values():
@@ -29,6 +34,7 @@ def disconnected():
         print('Client disconnected')
         user = [k for k, v in users.items() if v == request.sid][0]
         users.pop(user)
+    if not game == None:
         game.remove_player(user)
         send_update()
 
@@ -43,7 +49,16 @@ def start_game():
 def send_update():
     global game
     for k in users.keys():
-        emit('update', {'turn': game.turn % len(game.players), 'players': list(map(str, game.players)), 'hand': list(map(str, game.get_player_by_name(k).hand.cards))}, room=users[k])
+        response = {
+            'username': k,
+            'turn': str(game.players[game.turn % len(game.players)]),
+            'hand': list(map(str, game.get_player_by_name(k).hand.cards))
+        }
+        for player in game.players:
+            if not str(player) == k:
+                response['players'] = {}
+                response['players'][str(player)] = {'hand': list(map(str, player.show_hand()))}
+        emit('update', response, room=users[k])
 
 
 if __name__ == '__main__':

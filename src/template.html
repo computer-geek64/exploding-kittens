@@ -19,11 +19,18 @@
 <body>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script type="text/javascript">
-        //var socket = io.connect('http://' + document.domain + ':' + location.port);
-        var socket = io('/games/exploding-kittens');
+        //let socket = io.connect('http://' + document.domain + ':' + location.port);
+        let socket = io('/games/exploding-kittens');
 
         socket.on('connect', function() {
-            console.log('Websocket established!')
+            console.log('Websocket established!');
+            socket.emit('show_players');
+        });
+
+        socket.on('update_players', function(players) {
+            let span = document.createElement('span');
+            span.innerHTML = players.join('&emsp;')
+            document.querySelector('#top').appendChild(span);
         });
 
         socket.on('message', function(data) {
@@ -32,29 +39,68 @@
 
         socket.on('update', function(data) {
             document.querySelector('#game').innerHTML = '';
-            var p = document.createElement('p');
-            for(var i = 0; i < data['players'].length; i++) {
-                if(data['turn'] === i) {
-                    p.innerHTML += '<span class="active-turn">' + data['players'][i] + '</span>&emsp;';
+
+            let table = document.createElement('table');
+            table.style['width'] = '100%';
+
+            for(let player in data['players']) {
+                let tr = document.createElement('tr');
+
+                let td = document.createElement('td');
+                if(player === data['turn']) {
+                    td.classList.add('active-turn');
                 }
-                else {
-                    p.innerHTML += '<span>' + data['players'][i] + '</span>&emsp;';
+                td.innerText = player;
+                tr.appendChild(td);
+
+                for(let i = 0; i < data['players'][player]['hand'].length; i++) {
+                    td = document.createElement('td');
+                    td.innerText = data['players'][player]['hand'][i];
+                    tr.appendChild(td);
                 }
+
+                table.appendChild(tr);
             }
-            document.querySelector('#game').appendChild(p);
-            var ul = document.createElement('ul');
-            for(var i = 0; i < 8; i++) {
-                var li = document.createElement('li');
-                li.innerText = data['hand'][i];
-                ul.appendChild(li);
+
+            document.querySelector('#game').appendChild(table);
+
+            let div = document.createElement('div');
+            div.style['position'] = 'fixed';
+            div.style['bottom'] = 0;
+            div.style['height'] = '40px';
+            div.style['width'] = '100%';
+            div.style['border-top']
+
+            if(data['username'] === data['turn']) {
+                let heading = document.createElement('h1');
+                heading.style['text-align'] = 'center';
+                heading.innerText = 'It\'s your turn!';
+
+                div.style['height'] = '125px';
+                div.appendChild(heading);
             }
-            document.querySelector('#game').appendChild(ul);
+
+            table = document.createElement('table');
+            let tr = document.createElement('tr');
+
+            for(let i = 0; i < data['hand'].length; i++) {
+                let td = document.createElement('td');
+                td.innerText = data['hand'][i];
+                tr.appendChild(td);
+            }
+
+            table.appendChild(tr);
+            div.appendChild(table);
+            document.querySelector('#game').appendChild(div);
+
             console.log('Current hand: ' + data['hand']);
         });
     </script>
-    <input id="username-input" type="text" placeholder="Username">
-    <button onclick="socket.emit('join', document.querySelector('#username-input').value);">Join Game</button>
-    <button onclick="socket.emit('start');">Start Game</button>
+    <div id="top">
+        <input id="username-input" type="text" placeholder="Username">
+        <button onclick="socket.emit('join', document.querySelector('#username-input').value);">Join Game</button>
+        <button onclick="socket.emit('start');">Start Game</button>
+    </div>
     <div id="game"></div>
 </body>
 </html>
