@@ -72,7 +72,7 @@
 
             document.querySelector('#game').appendChild(table);
 
-            // Populate hand table
+            // Populate footer
             let div = document.createElement('div');
             div.style['position'] = 'fixed';
             div.style['bottom'] = 0;
@@ -96,7 +96,16 @@
 
             table.appendChild(tr);
             innerDiv.appendChild(table);
+
+            let playButton = document.createElement('button');
+            playButton.innerText = 'Play';
+            playButton.style['float'] = 'right';
+            playButton.setAttribute('id', 'play-button');
+            playButton.setAttribute('onclick', 'play_cards();');
+            playButton.setAttribute('disabled', 'disabled');
+
             div.appendChild(innerDiv);
+            div.appendChild(playButton);
             document.querySelector('#game').appendChild(div);
 
             console.log('Current hand: ' + data['hand']);
@@ -104,6 +113,10 @@
 
         // Helper functions
         function onclick_card(card) {
+            if(card.getAttribute('data-action') === 'defuse') {
+                return;
+            }
+
             if(card.classList.contains('selected-hand-card')) {
                 card.classList.remove('selected-hand-card');
             }
@@ -126,7 +139,7 @@
                 if(elements.length === 0 || elements.length === 1) {
                     card.classList.add('selected-hand-card');
                 }
-                else if(elements.length == 2) {
+                else if(elements.length === 2) {
                     if(duplicates) {
                         if(card.getAttribute('data-action') === elements[0].getAttribute('data-action')) {
                             card.classList.add('selected-hand-card');
@@ -158,6 +171,66 @@
                     }
                 }
             }
+
+            // Play button status
+            let elements = document.querySelectorAll('img.selected-hand-card');
+            if(elements.length === 0) {
+                document.querySelector('#play-button').setAttribute('disabled', 'disabled');
+            }
+            else if(elements.length === 1) {
+                if(elements[0].getAttribute('data-action') === 'beard cat' || elements[0].getAttribute('data-action') === 'cattermelon' || elements[0].getAttribute('data-action') === 'hairy potato cat' || elements[0].getAttribute('data-action') === 'rainbow-ralphing cat' || elements[0].getAttribute('data-action') === 'tacocat' || elements[0].getAttribute('data-action') === 'feral cat') {
+                    document.querySelector('#play-button').setAttribute('disabled', 'disabled');
+                }
+                else {
+                    document.querySelector('#play-button').removeAttribute('disabled');
+                }
+            }
+            else if(elements.length === 2) {
+                if(elements[0].getAttribute('data-action') === elements[1].getAttribute('data-action')) {
+                    document.querySelector('#play-button').removeAttribute('disabled');
+                }
+                else {
+                    document.querySelector('#play-button').setAttribute('disabled', 'disabled');
+                }
+            }
+            else if(elements.length === 3) {
+                if(elements[0].getAttribute('data-action') === elements[1].getAttribute('data-action') && elements[1].getAttribute('data-action') === elements[2].getAttribute('data-action')) {
+                    document.querySelector('#play-button').removeAttribute('disabled');
+                }
+                else {
+                    document.querySelector('#play-button').setAttribute('disabled', 'disabled');
+                }
+            }
+            else if(elements.length === 5) {
+                let duplicates = false;
+                for(let i = 0; i < elements.length; i++) {
+                    for(let j = i + 1; j < elements.length; j++) {
+                        if(elements[i].getAttribute('data-action') === elements[j].getAttribute('data-action')) {
+                            duplicates = true;
+                            break;
+                        }
+                    }
+
+                    if(duplicates) {
+                        break;
+                    }
+                }
+
+                if(!duplicates) {
+                    document.querySelector('#play-button').removeAttribute('disabled');
+                }
+            }
+            else {
+                document.querySelector('#play-button').setAttribute('disabled', 'disabled');
+            }
+        }
+
+        function play_cards() {
+            let cards = document.querySelectorAll('img.selected-hand-card');
+            for(let i = 0; i < cards.length; i++) {
+                cards[i].classList.remove('selected-hand-card');
+            }
+            console.log(cards);
         }
     </script>
     <div id="top">

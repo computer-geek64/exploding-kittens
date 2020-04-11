@@ -9,11 +9,11 @@ class Game:
     def __init__(self, players: list, imploding_kittens_expansion: bool = True, streaking_kittens_expansion: bool = True):
         self.players = [Player(x) for x in players]
 
-        cards = Deck.original_deck
+        cards = Deck.original_deck.copy()
         if imploding_kittens_expansion:
-            cards += Deck.imploding_kittens_expansion_deck
+            cards += Deck.imploding_kittens_expansion_deck.copy()
         if streaking_kittens_expansion:
-            cards += Deck.streaking_kittens_expansion_deck
+            cards += Deck.streaking_kittens_expansion_deck.copy()
 
         self.deck = Deck(cards)
         self.discard_pile = DiscardPile()
