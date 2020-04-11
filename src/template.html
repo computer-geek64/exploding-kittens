@@ -25,7 +25,7 @@
 
         .hand-card-image {
             border: 3px solid transparent;
-            border-radius: 5px;
+            border-radius: 10px;
         }
     </style>
 </head>
@@ -34,6 +34,7 @@
     <script type="text/javascript">
         let socket = io('/games/exploding-kittens');
 
+        // SocketIO handlers
         socket.on('connect', function() {
             console.log('Websocket established!');
         });
@@ -43,8 +44,10 @@
         });
 
         socket.on('update', function(data) {
+            // Reset game view
             document.querySelector('#game').innerHTML = '';
 
+            // Populate players table
             let table = document.createElement('table');
             table.style['width'] = '100%';
 
@@ -69,6 +72,7 @@
 
             document.querySelector('#game').appendChild(table);
 
+            // Populate hand table
             let div = document.createElement('div');
             div.style['position'] = 'fixed';
             div.style['bottom'] = 0;
@@ -76,7 +80,7 @@
             div.style['width'] = '100%';
 
             let innerDiv = document.createElement('div');
-            innerDiv.style['width'] = '500px';
+            innerDiv.style['width'] = 'calc(100% - 200px)';
             innerDiv.style['overflow-x'] = 'scroll';
             innerDiv.style['position'] = 'fixed';
             innerDiv.style['bottom'] = 0;
@@ -98,14 +102,60 @@
             console.log('Current hand: ' + data['hand']);
         });
 
+        // Helper functions
         function onclick_card(card) {
             if(card.classList.contains('selected-hand-card')) {
                 card.classList.remove('selected-hand-card');
             }
             else {
                 let elements = document.querySelectorAll('img.selected-hand-card');
-                if(elements.length === 0 || elements[elements.length - 1].getAttribute('data-action') === card.getAttribute('data-action')) {
+                let duplicates = false;
+                for(let i = 0; i < elements.length; i++) {
+                    for(let j = i + 1; j < elements.length; j++) {
+                        if(elements[i].getAttribute('data-action') === elements[j].getAttribute('data-action')) {
+                            duplicates = true;
+                            break;
+                        }
+                    }
+
+                    if(duplicates) {
+                        break;
+                    }
+                }
+
+                if(elements.length === 0 || elements.length === 1) {
                     card.classList.add('selected-hand-card');
+                }
+                else if(elements.length == 2) {
+                    if(duplicates) {
+                        if(card.getAttribute('data-action') === elements[0].getAttribute('data-action')) {
+                            card.classList.add('selected-hand-card');
+                        }
+                    }
+                    else {
+                        for(let i = 0; i < elements.length; i++) {
+                            if(card.getAttribute('data-action') === elements[i].getAttribute('data-action')) {
+                                duplicates = true;
+                                break;
+                            }
+                        }
+
+                        if(!duplicates) {
+                            card.classList.add('selected-hand-card');
+                        }
+                    }
+                }
+                else if(elements.length >= 3 && elements.length <= 4) {
+                    for(let i = 0; i < elements.length; i++) {
+                        if(card.getAttribute('data-action') === elements[i].getAttribute('data-action')) {
+                            duplicates = true;
+                            break;
+                        }
+                    }
+
+                    if(!duplicates) {
+                        card.classList.add('selected-hand-card');
+                    }
                 }
             }
         }
