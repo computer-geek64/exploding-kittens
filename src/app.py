@@ -52,7 +52,7 @@ def send_update():
         response['players'] = {}
         for player in game.players:
             if not str(player) == k:
-                response['players'][str(player)] = {'hand': list(map(str, player.show_hand()))}
+                response['players'][str(player)] = {'hand': list(map(lambda x: x.image, player.show_hand()))}
         emit('update', response, room=users[k])
 
 

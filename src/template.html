@@ -19,13 +19,13 @@
             content: "]";
         }
 
-        .selected-hand-card {
+        .selected-hand-card, .selected-player-card {
             border-color: red !important;
         }
 
-        .hand-card-image {
+        .hand-card-image, .player-card-image {
             border: 3px solid transparent;
-            border-radius: 10px;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -64,7 +64,8 @@
 
                 for(let i = 0; i < data['players'][player]['hand'].length; i++) {
                     td = document.createElement('td');
-                    td.innerText = data['players'][player]['hand'][i];
+                    td.innerHTML = '<img class="player-card-image" src="/static/cards/' + data['players'][player]['hand'][i] + '" alt="' + data['players'][player]['hand'][i] + '" style="height: 200px;">';
+                    //td.innerText = data['players'][player]['hand'][i];
                     tr.appendChild(td);
                 }
 

@@ -14,7 +14,7 @@ class Player:
         self.alter_the_future = []
 
     def show_hand(self):
-        return [x if x.flipped else Card('hidden', '') for x in self.hand.cards]
+        return [x if x.flipped else Card('card back', '') for x in self.hand.cards]
 
     def pick_from_randomly(self):
         return self.hand.remove(randint(0, len(self.hand) - 1))
