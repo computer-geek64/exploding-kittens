@@ -29,9 +29,9 @@ def disconnected():
         print('Client disconnected')
         user = [k for k, v in users.items() if v == request.sid][0]
         users.pop(user)
-    if game is not None:
-        game.remove_player(user)
-        send_update()
+        if game is not None:
+            game.remove_player(user)
+            send_update()
 
 
 @socketio.on('start', namespace='/games/exploding-kittens')
@@ -46,7 +46,7 @@ def send_update():
     for k in users.keys():
         response = {
             'username': k,
-            'turn': str(game.players[game.turn % len(game.players)]),
+            'turn': game.turn_queue[0],
             'hand': [{'action': x.action, 'image': x.image, 'flipped': x.flipped, 'id': x.id} for x in game.get_player_by_name(k).hand.cards]
         }
         for player in game.players:
@@ -54,6 +54,17 @@ def send_update():
                 response['players'] = {}
                 response['players'][str(player)] = {'hand': list(map(str, player.show_hand()))}
         emit('update', response, room=users[k])
+
+
+@socketio.on('play_card')
+def play_card(data):
+    global game
+    if len(data['cards']) == 1:
+        if game.get_player_by_name(game.turn_queue[0]).hand.cards[data['cards'][0]].action == 'attack':
+            game.turn_queue = list(dict.fromkeys(game.turn_queue))
+            game.end_turn()
+            game.turn_queue.insert(0, game.turn_queue[0])
+    send_update()
 
 
 if __name__ == '__main__':

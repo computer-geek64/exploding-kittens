@@ -69,7 +69,7 @@ class Game:
         self.turn_queue.remove(name)
         self.players.remove(self.get_player_by_name(name))
 
-    def play_card(self, cards, player, target=None):
+    def play_card(self, cards, player, target=None, target_card=None):
         for card in cards:
             self.get_player_by_name(player).hand.cards.remove(card)
         if len(cards) == 1:
@@ -91,9 +91,9 @@ class Game:
                 self.get_player_by_name(player).see_the_future.append(self.deck.draw_from_top())
                 self.get_player_by_name(player).see_the_future.append(self.deck.draw_from_top())
         elif len(cards) == 2 and cards[0].action == cards[1].action:
-            pass
+            self.get_player_by_name(player).hand.add(self.get_player_by_name(target).pick_from_randomly())
         elif len(cards) == 3 and cards[0].action == cards[1].action and cards[1].action == cards[2].action:
-            pass
+            self.get_player_by_name(player).hand.add(self.get_player_by_name(target).pick_card(target_card))
 
     def end_turn(self):
         x = self.turn_queue.pop(0)

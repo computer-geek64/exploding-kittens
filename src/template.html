@@ -3,6 +3,10 @@
 <head>
     <title>Test</title>
     <style>
+        body {
+            margin: 0px;
+        }
+
         .active-turn {
             color: red;
         }
@@ -14,12 +18,20 @@
         .active-turn::after {
             content: "]";
         }
+
+        .selected-hand-card {
+            border-color: red !important;
+        }
+
+        .hand-card-image {
+            border: 3px solid transparent;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script type="text/javascript">
-        //let socket = io.connect('http://' + document.domain + ':' + location.port);
         let socket = io('/games/exploding-kittens');
 
         socket.on('connect', function() {
@@ -60,34 +72,43 @@
             let div = document.createElement('div');
             div.style['position'] = 'fixed';
             div.style['bottom'] = 0;
-            div.style['height'] = '200px';
+            div.style['height'] = '210px';
             div.style['width'] = '100%';
-            div.style['border-top']
 
-            if(data['username'] === data['turn']) {
-                let heading = document.createElement('h1');
-                heading.style['text-align'] = 'center';
-                heading.innerText = 'It\'s your turn!';
-
-                div.style['height'] = '125px';
-                div.appendChild(heading);
-            }
+            let innerDiv = document.createElement('div');
+            innerDiv.style['width'] = '500px';
+            innerDiv.style['overflow-x'] = 'scroll';
+            innerDiv.style['position'] = 'fixed';
+            innerDiv.style['bottom'] = 0;
 
             table = document.createElement('table');
             let tr = document.createElement('tr');
 
             for(let i = 0; i < data['hand'].length; i++) {
                 let td = document.createElement('td');
-                td.innerHTML = '<img src="/static/cards/' + data['hand'][i]['image'] + '" alt="' + data['hand'][i]['action'] + '" style="height: 200px;">';
+                td.innerHTML = '<img class="hand-card-image" onclick="onclick_card(this);" data-action="' + data['hand'][i]['action'] + '" data-id="' + data['hand'][i]['id'] + '" src="/static/cards/' + data['hand'][i]['image'] + '" alt="' + data['hand'][i]['action'] + '" style="height: 200px;">';
                 tr.appendChild(td);
             }
 
             table.appendChild(tr);
-            div.appendChild(table);
+            innerDiv.appendChild(table);
+            div.appendChild(innerDiv);
             document.querySelector('#game').appendChild(div);
 
             console.log('Current hand: ' + data['hand']);
         });
+
+        function onclick_card(card) {
+            if(card.classList.contains('selected-hand-card')) {
+                card.classList.remove('selected-hand-card');
+            }
+            else {
+                let elements = document.querySelectorAll('img.selected-hand-card');
+                if(elements.length === 0 || elements[elements.length - 1].getAttribute('data-action') === card.getAttribute('data-action')) {
+                    card.classList.add('selected-hand-card');
+                }
+            }
+        }
     </script>
     <div id="top">
         <input id="username-input" type="text" placeholder="Username">
