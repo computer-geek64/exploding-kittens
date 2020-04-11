@@ -4,7 +4,14 @@
     <title>Test</title>
     <style>
         body {
-            margin: 0px;
+            margin: 0;
+        }
+
+        #footer {
+            position: fixed;
+            bottom: 0;
+            height: 225px;
+            width: 100%;
         }
 
         .active-turn {
@@ -26,6 +33,7 @@
         .hand-card-image, .player-card-image {
             border: 3px solid transparent;
             border-radius: 8px;
+            margin-right: 5px;
         }
     </style>
 </head>
@@ -45,58 +53,67 @@
 
         socket.on('update', function(data) {
             // Reset game view
-            console.log(data);
             document.querySelector('#game').innerHTML = '';
+            document.querySelector('#footer').innerHTML = '';
 
-            // Populate players table
-            let table = document.createElement('table');
-            table.style['width'] = '100%';
-
+            // Populate player hands
             for(let player in data['players']) {
-                let tr = document.createElement('tr');
+                let outerDiv= document.createElement('div');
+                outerDiv.style['margin-top'] = '25px';
 
-                let td = document.createElement('td');
+                let innerDiv = document.createElement('div');
+                innerDiv.style['width'] = 'calc(100% - 200px)';
+                innerDiv.style['overflow-x'] = 'scroll';
+                innerDiv.style['white-space'] = 'nowrap';
+                innerDiv.style['margin-left'] = '200px';
+
+                let p = document.createElement('span');
+                p.style['position'] = 'absolute';
+                p.style['margin'] = '0 0';
+                p.style['text-align'] = 'center';
+                p.style['width'] = '200px';
+                p.innerText = player;
                 if(player === data['turn']) {
-                    td.classList.add('active-turn');
+                    p.classList.add('active-turn');
                 }
-                td.innerText = player;
-                tr.appendChild(td);
+
+                outerDiv.appendChild(p);
 
                 for(let i = 0; i < data['players'][player]['hand'].length; i++) {
-                    td = document.createElement('td');
-                    td.innerHTML = '<img class="player-card-image" src="/static/cards/' + data['players'][player]['hand'][i] + '" alt="' + data['players'][player]['hand'][i] + '" style="height: 200px;">';
-                    tr.appendChild(td);
+                    let img = document.createElement('img');
+                    img.classList.add('player-card-image');
+                    img.setAttribute('src', '/static/cards/' + data['players'][player]['hand'][i]);
+                    img.setAttribute('alt', data['players'][player]['hand'][i]);
+                    img.style['height'] = '200px';
+
+                    innerDiv.appendChild(img);
                 }
 
-                table.appendChild(tr);
+                outerDiv.appendChild(innerDiv);
+                document.querySelector('#game').appendChild(outerDiv);
             }
 
-            document.querySelector('#game').appendChild(table);
-
             // Populate footer
-            let div = document.createElement('div');
-            div.style['position'] = 'fixed';
-            div.style['bottom'] = 0;
-            div.style['height'] = '228px';
-            div.style['width'] = '100%';
-
             let innerDiv = document.createElement('div');
+            innerDiv.style['height'] = '225px';
             innerDiv.style['width'] = 'calc(100% - 200px)';
             innerDiv.style['overflow-x'] = 'scroll';
             innerDiv.style['position'] = 'fixed';
-            innerDiv.style['bottom'] = 0;
-
-            table = document.createElement('table');
-            let tr = document.createElement('tr');
+            innerDiv.style['bottom'] = '0';
+            innerDiv.style['white-space'] = 'nowrap';
 
             for(let i = 0; i < data['hand'].length; i++) {
-                let td = document.createElement('td');
-                td.innerHTML = '<img class="hand-card-image" onclick="onclick_card(this);" data-action="' + data['hand'][i]['action'] + '" data-id="' + data['hand'][i]['id'] + '" src="/static/cards/' + data['hand'][i]['image'] + '" alt="' + data['hand'][i]['action'] + '" style="height: 200px;">';
-                tr.appendChild(td);
-            }
+                let img = document.createElement('img');
+                img.classList.add('hand-card-image');
+                img.setAttribute('onclick', 'onclick_hand_card(this);');
+                img.setAttribute('data-action', data['hand'][i]['action']);
+                img.setAttribute('data-id', data['hand'][i]['id']);
+                img.setAttribute('src', '/static/cards/' + data['hand'][i]['image']);
+                img.setAttribute('alt', data['hand'][i]['action']);
+                img.style['height'] = '200px';
 
-            table.appendChild(tr);
-            innerDiv.appendChild(table);
+                innerDiv.appendChild(img);
+            }
 
             let playButton = document.createElement('button');
             playButton.innerText = 'Play';
@@ -105,13 +122,12 @@
             playButton.setAttribute('onclick', 'play_cards();');
             playButton.setAttribute('disabled', 'disabled');
 
-            div.appendChild(innerDiv);
-            div.appendChild(playButton);
-            document.querySelector('#game').appendChild(div);
+            document.querySelector('#footer').appendChild(innerDiv);
+            document.querySelector('#footer').appendChild(playButton);
         });
 
         // Helper functions
-        function onclick_card(card) {
+        function onclick_hand_card(card) {
             if(card.getAttribute('data-action') === 'defuse') {
                 return;
             }
@@ -246,5 +262,6 @@
 
     </div>
     <div id="game"></div>
+    <div id="footer"></div>
 </body>
 </html>
