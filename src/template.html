@@ -24,13 +24,6 @@
 
         socket.on('connect', function() {
             console.log('Websocket established!');
-            socket.emit('show_players');
-        });
-
-        socket.on('update_players', function(players) {
-            let span = document.createElement('span');
-            span.innerHTML = players.join('&emsp;')
-            document.querySelector('#top').appendChild(span);
         });
 
         socket.on('message', function(data) {

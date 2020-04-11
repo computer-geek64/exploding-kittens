@@ -22,11 +22,6 @@ def join(username):
     send('You have joined the game, ' + username + '!')
 
 
-@socketio.on('show_players', namespace='/games/exploding-kittens')
-def show_players():
-    emit('update_players', list(users.keys()))
-
-
 @socketio.on('disconnect', namespace='/games/exploding-kittens')
 def disconnected():
     if request.sid in users.values():
@@ -34,7 +29,7 @@ def disconnected():
         print('Client disconnected')
         user = [k for k, v in users.items() if v == request.sid][0]
         users.pop(user)
-    if not game == None:
+    if game is not None:
         game.remove_player(user)
         send_update()
 

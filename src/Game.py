@@ -57,7 +57,7 @@ class Game:
                 self.deck.insert_randomly(Deck.exploding_kitten_cards[randint(0, len(Deck.exploding_kitten_cards) - 1)])
 
         self.deck.shuffle()
-        self.turn = 0
+        self.turn_queue = list(map(str, self.players))
 
     def get_player_by_name(self, name):
         return [x for x in self.players if x.name == name][0]
@@ -66,8 +66,36 @@ class Game:
         index = [i for i in range(len(self.deck.cards)) if self.deck.cards[i].action == 'exploding kitten'][0]
         self.discard_pile.add(self.deck.draw(index))
         self.discard_pile.add(self.get_player_by_name(name).hand.cards)
-        self.turn %= len(self.players)
+        self.turn_queue.remove(name)
         self.players.remove(self.get_player_by_name(name))
 
+    def play_card(self, cards, player, target=None):
+        for card in cards:
+            self.get_player_by_name(player).hand.cards.remove(card)
+        if len(cards) == 1:
+            if cards[0].action == 'attack':
+                self.turn_queue = list(dict.fromkeys(self.turn_queue))
+                self.end_turn()
+                self.turn_queue.insert(0, self.turn_queue[0])
+            elif cards[0].action == 'targeted attack':
+                self.turn_queue = list(dict.fromkeys(self.turn_queue))
+                while not self.turn_queue[0] == target:
+                    self.end_turn()
+                self.turn_queue.insert(0, target)
+            elif cards[0].action == 'favor':
+                self.get_player_by_name(target).select_card = True
+            elif cards[0].action == 'nope':
+                pass
+            elif cards[0].action == 'see the future':
+                self.get_player_by_name(player).see_the_future.append(self.deck.draw_from_top())
+                self.get_player_by_name(player).see_the_future.append(self.deck.draw_from_top())
+                self.get_player_by_name(player).see_the_future.append(self.deck.draw_from_top())
+        elif len(cards) == 2 and cards[0].action == cards[1].action:
+            pass
+        elif len(cards) == 3 and cards[0].action == cards[1].action and cards[1].action == cards[2].action:
+            pass
+
     def end_turn(self):
-        self.turn += 1
+        x = self.turn_queue.pop(0)
+        if x not in self.turn_queue:
+            self.turn_queue.append(x)
