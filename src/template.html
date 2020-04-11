@@ -65,7 +65,6 @@
                 for(let i = 0; i < data['players'][player]['hand'].length; i++) {
                     td = document.createElement('td');
                     td.innerHTML = '<img class="player-card-image" src="/static/cards/' + data['players'][player]['hand'][i] + '" alt="' + data['players'][player]['hand'][i] + '" style="height: 200px;">';
-                    //td.innerText = data['players'][player]['hand'][i];
                     tr.appendChild(td);
                 }
 
