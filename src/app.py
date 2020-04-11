@@ -36,6 +36,7 @@ def disconnected():
 
 @socketio.on('start', namespace='/games/exploding-kittens')
 def start_game():
+    print(users)
     global game
     game = Game(users.keys())
     send_update()
@@ -49,9 +50,9 @@ def send_update():
             'turn': game.turn_queue[0],
             'hand': [{'action': x.action, 'image': x.image, 'flipped': x.flipped, 'id': x.id} for x in game.get_player_by_name(k).hand.cards]
         }
+        response['players'] = {}
         for player in game.players:
             if not str(player) == k:
-                response['players'] = {}
                 response['players'][str(player)] = {'hand': list(map(str, player.show_hand()))}
         emit('update', response, room=users[k])
 

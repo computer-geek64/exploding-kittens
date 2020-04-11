@@ -65,7 +65,7 @@ class Game:
     def remove_player(self, name):
         index = [i for i in range(len(self.deck.cards)) if self.deck.cards[i].action == 'exploding kitten']
         if len(index) > 0:
-           self.discard_pile.add(self.deck.draw(index))
+           self.discard_pile.add(self.deck.draw(index[0]))
         self.discard_pile.add(self.get_player_by_name(name).hand.cards)
         self.turn_queue.remove(name)
         self.players.remove(self.get_player_by_name(name))

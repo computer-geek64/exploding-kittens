@@ -45,6 +45,7 @@
 
         socket.on('update', function(data) {
             // Reset game view
+            console.log(data);
             document.querySelector('#game').innerHTML = '';
 
             // Populate players table
@@ -76,7 +77,7 @@
             let div = document.createElement('div');
             div.style['position'] = 'fixed';
             div.style['bottom'] = 0;
-            div.style['height'] = '210px';
+            div.style['height'] = '228px';
             div.style['width'] = '100%';
 
             let innerDiv = document.createElement('div');
