@@ -108,8 +108,6 @@
             div.appendChild(innerDiv);
             div.appendChild(playButton);
             document.querySelector('#game').appendChild(div);
-
-            console.log('Current hand: ' + data['hand']);
         });
 
         // Helper functions
@@ -227,17 +225,25 @@
         }
 
         function play_cards() {
-            let cards = document.querySelectorAll('img.selected-hand-card');
+            let cards = document.querySelectorAll('img.hand-card-image');
+            let response_cards = [];
             for(let i = 0; i < cards.length; i++) {
-                cards[i].classList.remove('selected-hand-card');
+                if(cards[i].classList.contains('selected-hand-card')) {
+                    cards[i].classList.remove('selected-hand-card');
+                    response_cards.push(i);
+                }
             }
-            console.log(cards);
+
+            socket.emit('play_cards', {
+                'cards': response_cards
+            });
         }
     </script>
     <div id="top">
         <input id="username-input" type="text" placeholder="Username">
         <button onclick="socket.emit('join', document.querySelector('#username-input').value);">Join Game</button>
         <button onclick="socket.emit('start');">Start Game</button>
+
     </div>
     <div id="game"></div>
 </body>
