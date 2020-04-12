@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>Exploding Kittens</title>
+    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
     <style>
         body {
             margin: 0;
@@ -42,7 +43,7 @@
         .hand-card-image, .player-card-image {
             border: 3px solid transparent;
             border-radius: 8px;
-            margin-right: 5px;
+            margin-left: 5px;
         }
 
         #play-button, #draw-button {
@@ -53,6 +54,8 @@
             height: 112.5px;
             color: white;
             font-weight: bold;
+            font-family: Oswald;
+            font-size: 40px;
         }
     </style>
 </head>
@@ -118,7 +121,7 @@
 
             // Populate footer
             let playButton = document.createElement('button');
-            playButton.innerText = 'Play';
+            playButton.innerText = 'PLAY';
             playButton.setAttribute('id', 'play-button');
             playButton.setAttribute('onclick', 'play_cards();');
             playButton.setAttribute('disabled', 'disabled');
@@ -128,7 +131,7 @@
             document.querySelector('#footer').appendChild(playButton);
 
             let drawButton = document.createElement('button');
-            drawButton.innerText = 'Draw';
+            drawButton.innerText = 'DRAW';
             drawButton.setAttribute('id', 'draw-button');
             drawButton.setAttribute('onclick', 'socket.emit(\'draw_card\');');
             drawButton.style['bottom'] = '0';
