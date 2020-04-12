@@ -67,6 +67,8 @@ def play_cards(data):
             game.turn_queue.insert(0, game.turn_queue[0])
         elif game.get_player_by_name(game.turn_queue[0]).hand.cards[data['cards'][0]].action == 'skip':
             game.end_turn()
+        elif game.get_player_by_name(game.turn_queue[0]).hand.cards[data['cards'][0]].action == 'reverse':
+            game.turn_queue = game.turn_queue[::-1]
     send_update()
 
 
