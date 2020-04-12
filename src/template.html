@@ -44,6 +44,16 @@
             border-radius: 8px;
             margin-right: 5px;
         }
+
+        #play-button, #draw-button {
+            position: absolute;
+            border: 0;
+            padding: 0;
+            width: 200px;
+            height: 112.5px;
+            color: white;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -109,19 +119,29 @@
             // Populate footer
             let playButton = document.createElement('button');
             playButton.innerText = 'Play';
-            playButton.style['float'] = 'left';
             playButton.setAttribute('id', 'play-button');
             playButton.setAttribute('onclick', 'play_cards();');
             playButton.setAttribute('disabled', 'disabled');
+            playButton.style['top'] = '0';
+            playButton.style['background-color'] = '#01FF70';
 
             document.querySelector('#footer').appendChild(playButton);
+
+            let drawButton = document.createElement('button');
+            drawButton.innerText = 'Draw';
+            drawButton.setAttribute('id', 'draw-button');
+            drawButton.setAttribute('onclick', 'socket.emit(\'draw_card\');');
+            drawButton.style['bottom'] = '0';
+            drawButton.style['background-color'] = 'red';
+
+            document.querySelector('#footer').appendChild(drawButton);
 
             let innerDiv = document.createElement('div');
             innerDiv.style['height'] = '225px';
             innerDiv.style['width'] = 'calc(100% - 200px)';
             innerDiv.style['overflow-x'] = 'scroll';
             innerDiv.style['white-space'] = 'nowrap';
-            innerDiv.style['position'] = 'fixed';
+            innerDiv.style['position'] = 'absolute';
             innerDiv.style['bottom'] = '0';
             innerDiv.style['right'] = '0';
 

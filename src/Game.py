@@ -41,7 +41,6 @@ class Game:
             else:
                 self.deck.insert_randomly(Deck.defuse_cards[randint(0, len(Deck.defuse_cards) - 1)])
 
-        i = 0
         for i in range(len(self.players) - 1):
             if i < len(Deck.exploding_kitten_cards):
                 self.deck.insert_randomly(Deck.exploding_kitten_cards[i])
@@ -58,6 +57,7 @@ class Game:
 
         self.deck.shuffle()
         self.turn_queue = list(map(str, self.players))
+        print(self.deck)
 
     def get_player_by_name(self, name):
         return [x for x in self.players if x.name == name][0]

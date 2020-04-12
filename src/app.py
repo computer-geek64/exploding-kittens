@@ -74,5 +74,13 @@ def play_cards(data):
     send_update()
 
 
+@socketio.on('draw_card', namespace='/games/exploding-kittens')
+def draw_card():
+    global game
+    game.get_player_by_name(game.turn_queue[0]).hand.add(game.deck.draw_from_top())
+    game.end_turn()
+    send_update()
+
+
 if __name__ == '__main__':
     app.run('0.0.0.0', 8000)
