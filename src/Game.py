@@ -57,7 +57,6 @@ class Game:
 
         self.deck.shuffle()
         self.turn_queue = list(map(str, self.players))
-        print(self.deck)
 
     def get_player_by_name(self, name):
         return [x for x in self.players if x.name == name][0]
