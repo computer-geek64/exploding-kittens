@@ -24,6 +24,7 @@ def join(username):
 
 @socketio.on('disconnect', namespace='/games/exploding-kittens')
 def disconnected():
+    global users
     if request.sid in users.values():
         global game
         print('Client disconnected')

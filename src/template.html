@@ -7,11 +7,20 @@
             margin: 0;
         }
 
+        #game {
+            height: calc(100% - 237px);
+            overflow-y: scroll;
+            position: fixed;
+            width: 100%;
+            padding-top: 10px;
+        }
+
         #footer {
             position: fixed;
             bottom: 0;
             height: 225px;
             width: 100%;
+            border-top: 2px solid black;
         }
 
         .active-turn {
@@ -53,13 +62,17 @@
 
         socket.on('update', function(data) {
             // Reset game view
+            let top = document.querySelector('#top');
+            if(top !== null) {
+                top.remove();
+            }
             document.querySelector('#game').innerHTML = '';
             document.querySelector('#footer').innerHTML = '';
 
             // Populate player hands
             for(let player in data['players']) {
                 let outerDiv= document.createElement('div');
-                outerDiv.style['margin-top'] = '25px';
+                outerDiv.style['margin-bottom'] = '25px';
 
                 let innerDiv = document.createElement('div');
                 innerDiv.style['width'] = 'calc(100% - 200px)';
@@ -94,13 +107,23 @@
             }
 
             // Populate footer
+            let playButton = document.createElement('button');
+            playButton.innerText = 'Play';
+            playButton.style['float'] = 'left';
+            playButton.setAttribute('id', 'play-button');
+            playButton.setAttribute('onclick', 'play_cards();');
+            playButton.setAttribute('disabled', 'disabled');
+
+            document.querySelector('#footer').appendChild(playButton);
+
             let innerDiv = document.createElement('div');
             innerDiv.style['height'] = '225px';
             innerDiv.style['width'] = 'calc(100% - 200px)';
             innerDiv.style['overflow-x'] = 'scroll';
+            innerDiv.style['white-space'] = 'nowrap';
             innerDiv.style['position'] = 'fixed';
             innerDiv.style['bottom'] = '0';
-            innerDiv.style['white-space'] = 'nowrap';
+            innerDiv.style['right'] = '0';
 
             for(let i = 0; i < data['hand'].length; i++) {
                 let img = document.createElement('img');
@@ -115,15 +138,7 @@
                 innerDiv.appendChild(img);
             }
 
-            let playButton = document.createElement('button');
-            playButton.innerText = 'Play';
-            playButton.style['float'] = 'right';
-            playButton.setAttribute('id', 'play-button');
-            playButton.setAttribute('onclick', 'play_cards();');
-            playButton.setAttribute('disabled', 'disabled');
-
             document.querySelector('#footer').appendChild(innerDiv);
-            document.querySelector('#footer').appendChild(playButton);
         });
 
         // Helper functions
